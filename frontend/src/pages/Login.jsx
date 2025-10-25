@@ -1,0 +1,31 @@
+import { useState } from "react";
+import { API } from "../api";
+import "./../styles.css";
+
+export default function Login() {
+  const [form, setForm] = useState({ email: "", password: "" });
+
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/login", form);
+      alert(`Bienvenido ${res.data.user.name}`);
+    } catch (err) {
+      alert(err.response?.data?.msg || "Error al iniciar sesión");
+    }
+  };
+
+  return (
+    <div className="container">
+      <h2>Iniciar sesión</h2>
+      <form onSubmit={handleSubmit}>
+        <input name="email" placeholder="Correo electrónico" onChange={handleChange} />
+        <input name="password" type="password" placeholder="Contraseña" onChange={handleChange} />
+        <button type="submit">Entrar</button>
+      </form>
+      <p>¿No tienes cuenta? <a href="/register">Regístrate</a></p>
+    </div>
+  );
+}
