@@ -1,42 +1,33 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 const router = express.Router();
 
-// Registro
 router.post("/register", async (req, res) => {
+  console.log("📩 Llamada recibida en /register");
+  console.log("➡️ Body recibido:", req.body);
+
   try {
     const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ msg: "Faltan campos" });
+    }
+
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ msg: "El usuario ya existe" });
+    if (existingUser) {
+      console.log("⚠️ El usuario ya existe:", email);
+      return res.status(400).json({ msg: "El usuario ya existe" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
-
-    res.status(201).json({ msg: "Usuario creado correctamente" });
+    console.log("✅ Usuario guardado correctamente:", newUser);
+    res.status(201).json({ msg: "Usuario registrado correctamente" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Login
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "Usuario no encontrado" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Contraseña incorrecta" });
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ Error en /register:", err);
+    res.status(500).json({ msg: "Error del servidor", error: err.message });
   }
 });
 
