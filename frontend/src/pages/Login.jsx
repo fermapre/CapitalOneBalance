@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API } from "../api";
 import "./../styles.css";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -12,6 +14,8 @@ export default function Login() {
     try {
       const res = await API.post("/login", form);
       alert(`Bienvenido ${res.data.user.name}`);
+      // Redirect to main after successful login
+      navigate("/main");
     } catch (err) {
       console.error("Login error:", err);
       const serverMsg = err?.response?.data || err?.message || "Error al iniciar sesión";
