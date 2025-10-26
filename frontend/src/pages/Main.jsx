@@ -7,14 +7,30 @@ import logo from "../assets/logo.png";
 
 export default function Main() {
   const navigate = useNavigate();
-  const [startingAmount] = useState(() => {
-    const saved = localStorage.getItem('startingAmount');
-    return saved ? parseFloat(saved) : 10000;
+  
+  // Sync with Balance page settings
+  const [totalMoney] = useState(() => {
+    const saved = localStorage.getItem('totalMoney');
+    return saved ? parseFloat(saved) : 100000;
   });
-  const [totalExpenses, setTotalExpenses] = useState(0);
-  const [remaining, setRemaining] = useState(startingAmount);
-  const [needs, setNeeds] = useState(0);
-  const [wants, setWants] = useState(0);
+  
+  const [needsPercent] = useState(() => {
+    const saved = localStorage.getItem('needsPercent');
+    return saved ? parseFloat(saved) : 40;
+  });
+  
+  const [wantsPercent] = useState(() => {
+    const saved = localStorage.getItem('wantsPercent');
+    return saved ? parseFloat(saved) : 40;
+  });
+  
+  const savingsPercent = 100 - needsPercent - wantsPercent;
+  const needsBudget = (totalMoney * needsPercent) / 100;
+  const wantsBudget = (totalMoney * wantsPercent) / 100;
+  const savingsBudget = (totalMoney * savingsPercent) / 100;
+  
+  const [needsSpent, setNeedsSpent] = useState(0);
+  const [wantsSpent, setWantsSpent] = useState(0);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
@@ -41,16 +57,12 @@ export default function Main() {
         }
       });
       
-      setNeeds(needsTotal);
-      setWants(wantsTotal);
-      
-      const total = needsTotal + wantsTotal;
-      setTotalExpenses(total);
-      setRemaining(startingAmount - total);
+      setNeedsSpent(needsTotal);
+      setWantsSpent(wantsTotal);
     } catch (error) {
       console.error("Error parsing CSV:", error);
     }
-  }, [startingAmount]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -116,7 +128,7 @@ export default function Main() {
           }}
           onClick={handleLogout}
         >
-          Cerrar sesión
+          Logout
         </button>
       </div>
 
@@ -128,14 +140,14 @@ export default function Main() {
         padding: '2rem 1rem',
         gap: '2rem'
       }}>
-        {/* Budget Card at the Top */}
+        {/* Budget Overview Card */}
         <div style={{
           background: 'white',
           padding: '2rem',
           borderRadius: '12px',
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
           width: '100%',
-          maxWidth: '500px',
+          maxWidth: '600px',
           border: '3px solid #1b365d'
         }}>
           <h2 style={{ 
@@ -144,8 +156,66 @@ export default function Main() {
             marginBottom: '1.5rem',
             fontSize: '1.5rem'
           }}>
-            💰 Tu Presupuesto
+            💰 Budget Overview
           </h2>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: '1rem',
+            marginBottom: '1.5rem'
+          }}>
+            <div style={{
+              padding: '1rem',
+              background: '#e8f5e9',
+              borderRadius: '8px',
+              textAlign: 'center',
+              border: '2px solid #28a745'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>🏠</div>
+              <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>Needs</div>
+              <div style={{ fontWeight: 'bold', color: '#28a745', fontSize: '1.1rem' }}>
+                {needsPercent}%
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                ${needsBudget.toLocaleString()}
+              </div>
+            </div>
+            
+            <div style={{
+              padding: '1rem',
+              background: '#fff8e1',
+              borderRadius: '8px',
+              textAlign: 'center',
+              border: '2px solid #ffc107'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>🎮</div>
+              <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>Wants</div>
+              <div style={{ fontWeight: 'bold', color: '#ffc107', fontSize: '1.1rem' }}>
+                {wantsPercent}%
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                ${wantsBudget.toLocaleString()}
+              </div>
+            </div>
+            
+            <div style={{
+              padding: '1rem',
+              background: '#e3f2fd',
+              borderRadius: '8px',
+              textAlign: 'center',
+              border: '2px solid #17a2b8'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>💰</div>
+              <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>Savings</div>
+              <div style={{ fontWeight: 'bold', color: '#17a2b8', fontSize: '1.1rem' }}>
+                {savingsPercent.toFixed(1)}%
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                ${savingsBudget.toLocaleString()}
+              </div>
+            </div>
+          </div>
           
           <div style={{ marginBottom: '1rem' }}>
             <div style={{ 
@@ -156,9 +226,9 @@ export default function Main() {
               borderRadius: '8px',
               marginBottom: '0.5rem'
             }}>
-              <span style={{ fontWeight: '600', color: '#666' }}>Monto Inicial:</span>
-              <span style={{ fontWeight: 'bold', color: '#28a745', fontSize: '1.1rem' }}>
-                ${startingAmount.toFixed(2)}
+              <span style={{ fontWeight: '600', color: '#666' }}>Total Available:</span>
+              <span style={{ fontWeight: 'bold', color: '#1b365d', fontSize: '1.1rem' }}>
+                ${totalMoney.toLocaleString()}
               </span>
             </div>
             
@@ -170,9 +240,9 @@ export default function Main() {
               borderRadius: '8px',
               marginBottom: '0.5rem'
             }}>
-              <span style={{ fontWeight: '600', color: '#666' }}>Necesidades:</span>
+              <span style={{ fontWeight: '600', color: '#666' }}>Needs Spent:</span>
               <span style={{ fontWeight: 'bold', color: '#28a745', fontSize: '1.1rem' }}>
-                -${needs.toFixed(2)}
+                ${needsSpent.toLocaleString()}
               </span>
             </div>
             
@@ -184,9 +254,9 @@ export default function Main() {
               borderRadius: '8px',
               marginBottom: '0.5rem'
             }}>
-              <span style={{ fontWeight: '600', color: '#666' }}>Deseos:</span>
+              <span style={{ fontWeight: '600', color: '#666' }}>Wants Spent:</span>
               <span style={{ fontWeight: 'bold', color: '#ffc107', fontSize: '1.1rem' }}>
-                -${wants.toFixed(2)}
+                ${wantsSpent.toLocaleString()}
               </span>
             </div>
             
@@ -198,9 +268,9 @@ export default function Main() {
               borderRadius: '8px',
               marginBottom: '0.5rem'
             }}>
-              <span style={{ fontWeight: '600', color: '#666' }}>Total Gastado:</span>
+              <span style={{ fontWeight: '600', color: '#666' }}>Total Spent:</span>
               <span style={{ fontWeight: 'bold', color: '#e41c2d', fontSize: '1.1rem' }}>
-                -${totalExpenses.toFixed(2)}
+                ${(needsSpent + wantsSpent).toLocaleString()}
               </span>
             </div>
             
@@ -208,17 +278,17 @@ export default function Main() {
               display: 'flex', 
               justifyContent: 'space-between',
               padding: '0.75rem',
-              background: remaining >= 0 ? '#d4edda' : '#f8d7da',
+              background: '#d4edda',
               borderRadius: '8px',
-              border: `2px solid ${remaining >= 0 ? '#28a745' : '#e41c2d'}`
+              border: '2px solid #28a745'
             }}>
-              <span style={{ fontWeight: '600', color: '#333' }}>Disponible:</span>
+              <span style={{ fontWeight: '600', color: '#333' }}>Remaining Budget:</span>
               <span style={{ 
                 fontWeight: 'bold', 
-                color: remaining >= 0 ? '#28a745' : '#e41c2d',
+                color: '#28a745',
                 fontSize: '1.3rem'
               }}>
-                ${remaining.toFixed(2)}
+                ${(totalMoney - needsSpent - wantsSpent).toLocaleString()}
               </span>
             </div>
           </div>
@@ -241,7 +311,7 @@ export default function Main() {
             onMouseOver={(e) => e.target.style.background = '#0f223e'}
             onMouseOut={(e) => e.target.style.background = '#1b365d'}
           >
-            📊 Ver Desglose de Gastos
+            📊 View Expense Details
           </button>
         </div>
 
@@ -265,7 +335,7 @@ export default function Main() {
             fontSize: '1.1rem',
             textAlign: 'center'
           }}>
-            Bienvenido, {user.name || 'Usuario'}! 👋
+            Welcome, {user.name || 'User'}! 👋
           </p>
         </div>
       </div>
