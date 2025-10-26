@@ -1,8 +1,10 @@
+import logo from "../assets/logo.png";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Balance.css";
 import csvData from "../assets/BankTestDB.csv?raw";
 import { parseExpenses } from "../utils/csvParser";
+
 
 export default function Balance() {
   const [expenses, setExpenses] = useState([]);
@@ -185,7 +187,10 @@ export default function Balance() {
   return (
     <div className="balance-page">
       <header className="dashboard-header">
-        <h1>Hello, {user.name || 'User'}! 👋</h1>
+        <div className="logo-section">
+          <img src={logo} alt="Capital One" className="capitalone-logo" />
+          <h1>Hola, {user?.name || "usuario"} 👋</h1>
+        </div>
         <div className="header-actions">
           <button onClick={() => navigate("/main")} className="btn-secondary">← Back</button>
           <button onClick={handleLogout} className="btn-secondary">Logout</button>
