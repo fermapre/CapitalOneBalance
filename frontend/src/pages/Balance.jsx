@@ -1,4 +1,3 @@
-import logo from "../assets/logo.png";
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -180,9 +179,6 @@ export default function Balance() {
     <>
       <Header />
       <div className="balance-page" style={{paddingTop: '70px', paddingBottom: '60px', minHeight: '100vh'}}>
-        <div className="logo-section" style={{textAlign: 'center', padding: '1.5rem 0'}}>
-          <img src={logo} alt="Capital One" className="capitalone-logo" style={{width: '250px', maxWidth: '90%'}} />
-        </div>
 
       {showPercentInput && (
         <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000}}>

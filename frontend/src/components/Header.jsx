@@ -14,20 +14,24 @@ export default function Header() {
   };
 
   return (
-    <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: '70px',
-      background: 'linear-gradient(135deg, #1b365d 0%, #0a1f44 100%)',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '0 2rem',
-      zIndex: 1000
-    }}>
+    <header
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '70px',
+        background: 'white',
+        color: '#1b365d',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 2rem',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        zIndex: 1000,
+        borderBottom: '2px solid #1b365d'
+      }}
+    >
       {/* Logo Section */}
       <div 
         onClick={() => isAuthenticated ? navigate('/main') : navigate('/')} 
@@ -60,9 +64,9 @@ export default function Header() {
           <button
             onClick={() => navigate('/main')}
             style={{
-              background: location.pathname === '/main' ? 'rgba(255,255,255,0.2)' : 'transparent',
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: '#fff',
+              background: location.pathname === '/main' ? '#1b365d' : 'transparent',
+              border: '2px solid #1b365d',
+              color: location.pathname === '/main' ? 'white' : '#1b365d',
               padding: '0.5rem 1rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -70,8 +74,16 @@ export default function Header() {
               fontSize: '0.95rem',
               transition: 'all 0.3s'
             }}
-            onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
-            onMouseOut={(e) => e.target.style.background = location.pathname === '/main' ? 'rgba(255,255,255,0.2)' : 'transparent'}
+            onMouseOver={(e) => {
+              if (location.pathname !== '/main') {
+                e.target.style.background = '#f0f0f0';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (location.pathname !== '/main') {
+                e.target.style.background = 'transparent';
+              }
+            }}
           >
             🏠 Dashboard
           </button>
@@ -79,9 +91,9 @@ export default function Header() {
           <button
             onClick={() => navigate('/balance')}
             style={{
-              background: location.pathname === '/balance' ? 'rgba(255,255,255,0.2)' : 'transparent',
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: '#fff',
+              background: location.pathname === '/balance' ? '#1b365d' : 'transparent',
+              border: '2px solid #1b365d',
+              color: location.pathname === '/balance' ? 'white' : '#1b365d',
               padding: '0.5rem 1rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -89,8 +101,16 @@ export default function Header() {
               fontSize: '0.95rem',
               transition: 'all 0.3s'
             }}
-            onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
-            onMouseOut={(e) => e.target.style.background = location.pathname === '/balance' ? 'rgba(255,255,255,0.2)' : 'transparent'}
+            onMouseOver={(e) => {
+              if (location.pathname !== '/balance') {
+                e.target.style.background = '#f0f0f0';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (location.pathname !== '/balance') {
+                e.target.style.background = 'transparent';
+              }
+            }}
           >
             💼 Balance
           </button>
@@ -98,12 +118,13 @@ export default function Header() {
           <div style={{
             height: '30px',
             width: '1px',
-            background: 'rgba(255,255,255,0.3)'
+            background: '#ccc'
           }}></div>
 
           <span style={{
-            color: 'rgba(255,255,255,0.8)',
-            fontSize: '0.9rem'
+            color: '#1b365d',
+            fontSize: '0.9rem',
+            fontWeight: '600'
           }}>
             👋 {user.name || 'User'}
           </span>
@@ -111,9 +132,9 @@ export default function Header() {
           <button
             onClick={handleLogout}
             style={{
-              background: '#e41c2d',
-              border: 'none',
-              color: '#fff',
+              background: 'transparent',
+              border: '2px solid #1b365d',
+              color: '#1b365d',
               padding: '0.5rem 1rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -121,8 +142,8 @@ export default function Header() {
               fontSize: '0.95rem',
               transition: 'all 0.3s'
             }}
-            onMouseOver={(e) => e.target.style.background = '#c01828'}
-            onMouseOut={(e) => e.target.style.background = '#e41c2d'}
+            onMouseOver={(e) => e.target.style.background = '#f0f0f0'}
+            onMouseOut={(e) => e.target.style.background = 'transparent'}
           >
             Logout
           </button>
@@ -136,9 +157,9 @@ export default function Header() {
           <button
             onClick={() => navigate('/')}
             style={{
-              background: location.pathname === '/' ? 'rgba(255,255,255,0.2)' : 'transparent',
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: '#fff',
+              background: 'transparent',
+              border: '2px solid #1b365d',
+              color: '#1b365d',
               padding: '0.5rem 1rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -146,8 +167,8 @@ export default function Header() {
               fontSize: '0.95rem',
               transition: 'all 0.3s'
             }}
-            onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
-            onMouseOut={(e) => e.target.style.background = location.pathname === '/' ? 'rgba(255,255,255,0.2)' : 'transparent'}
+            onMouseOver={(e) => e.target.style.background = '#f0f0f0'}
+            onMouseOut={(e) => e.target.style.background = 'transparent'}
           >
             Login
           </button>
@@ -155,9 +176,9 @@ export default function Header() {
           <button
             onClick={() => navigate('/register')}
             style={{
-              background: location.pathname === '/register' ? '#fff' : 'transparent',
-              border: '1px solid #fff',
-              color: location.pathname === '/register' ? '#1b365d' : '#fff',
+              background: '#1b365d',
+              border: '2px solid #1b365d',
+              color: 'white',
               padding: '0.5rem 1rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -165,16 +186,8 @@ export default function Header() {
               fontSize: '0.95rem',
               transition: 'all 0.3s'
             }}
-            onMouseOver={(e) => {
-              e.target.style.background = '#fff';
-              e.target.style.color = '#1b365d';
-            }}
-            onMouseOut={(e) => {
-              if (location.pathname !== '/register') {
-                e.target.style.background = 'transparent';
-                e.target.style.color = '#fff';
-              }
-            }}
+            onMouseOver={(e) => e.target.style.background = '#0f223e'}
+            onMouseOut={(e) => e.target.style.background = '#1b365d'}
           >
             Sign Up
           </button>

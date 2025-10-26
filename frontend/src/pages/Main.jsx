@@ -5,7 +5,6 @@ import Footer from "../components/Footer";
 import "./../styles.css";
 import csvData from "../assets/BankTestDB.csv?raw";
 import { parseExpenses } from "../utils/csvParser";
-import logo from "../assets/logo.png";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ export default function Main() {
   
   const [needsSpent, setNeedsSpent] = useState(0);
   const [wantsSpent, setWantsSpent] = useState(0);
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     try {
@@ -256,30 +254,6 @@ export default function Main() {
           >
             📊 View Expense Details
           </button>
-        </div>
-
-        {/* Logo Section Below */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1rem'
-        }}>
-          <img 
-            src={logo} 
-            alt="Capital One" 
-            style={{ 
-              width: '300px',
-              maxWidth: '100%'
-            }} 
-          />
-          <p style={{ 
-            color: 'white', 
-            fontSize: '1.1rem',
-            textAlign: 'center'
-          }}>
-            Welcome, {user.name || 'User'}! 👋
-          </p>
         </div>
       </div>
       </div>
