@@ -186,26 +186,26 @@ export default function Balance() {
             <h2 style={{color: '#1b365d', marginBottom: '1rem'}}>📊 Configure Your Budget</h2>
             
             <div style={{marginBottom: '1rem'}}>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>💵 Total Available Money ($)</label>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#1b365d'}}>💵 Total Available Money ($)</label>
               <input type="number" step="0.01" min="0" value={tempTotalMoney} onChange={(e) => setTempTotalMoney(e.target.value)} style={{width: '100%', padding: '0.75rem', fontSize: '1rem', border: '2px solid #e0e0e0', borderRadius: '8px'}} />
             </div>
 
             <div style={{marginBottom: '1rem'}}>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>🏠 Needs (%)</label>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#1b365d'}}>🏠 Needs (%)</label>
               <input type="number" step="1" min="0" max="100" value={tempNeedsPercent} onChange={(e) => setTempNeedsPercent(e.target.value)} style={{width: '100%', padding: '0.75rem', fontSize: '1rem', border: '2px solid #e0e0e0', borderRadius: '8px'}} />
-              <p style={{fontSize: '0.85rem', color: '#666', marginTop: '0.25rem'}}>= ${((parseFloat(tempTotalMoney || 0) * parseFloat(tempNeedsPercent || 0)) / 100).toLocaleString()}</p>
+              <p style={{fontSize: '0.85rem', color: '#1b365d', marginTop: '0.25rem'}}>= ${((parseFloat(tempTotalMoney || 0) * parseFloat(tempNeedsPercent || 0)) / 100).toLocaleString()}</p>
             </div>
 
             <div style={{marginBottom: '1rem'}}>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>🎮 Wants (%)</label>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#1b365d'}}>🎮 Wants (%)</label>
               <input type="number" step="1" min="0" max="100" value={tempWantsPercent} onChange={(e) => setTempWantsPercent(e.target.value)} style={{width: '100%', padding: '0.75rem', fontSize: '1rem', border: '2px solid #e0e0e0', borderRadius: '8px'}} />
-              <p style={{fontSize: '0.85rem', color: '#666', marginTop: '0.25rem'}}>= ${((parseFloat(tempTotalMoney || 0) * parseFloat(tempWantsPercent || 0)) / 100).toLocaleString()}</p>
+              <p style={{fontSize: '0.85rem', color: '#1b365d', marginTop: '0.25rem'}}>= ${((parseFloat(tempTotalMoney || 0) * parseFloat(tempWantsPercent || 0)) / 100).toLocaleString()}</p>
             </div>
 
             <div style={{marginBottom: '1.5rem', padding: '1rem', background: '#f8f9fa', borderRadius: '8px'}}>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>💰 Savings (%)</label>
-              <p style={{fontSize: '1.2rem', fontWeight: 'bold', color: '#17a2b8'}}>{(100 - parseFloat(tempNeedsPercent || 0) - parseFloat(tempWantsPercent || 0)).toFixed(1)}%</p>
-              <p style={{fontSize: '0.85rem', color: '#666'}}>= ${((parseFloat(tempTotalMoney || 0) * (100 - parseFloat(tempNeedsPercent || 0) - parseFloat(tempWantsPercent || 0))) / 100).toLocaleString()}</p>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#1b365d'}}>💰 Savings (%)</label>
+              <p style={{fontSize: '1.2rem', fontWeight: 'bold', color: '#1b365d'}}>{(100 - parseFloat(tempNeedsPercent || 0) - parseFloat(tempWantsPercent || 0)).toFixed(1)}%</p>
+              <p style={{fontSize: '0.85rem', color: '#1b365d'}}>= ${((parseFloat(tempTotalMoney || 0) * (100 - parseFloat(tempNeedsPercent || 0) - parseFloat(tempWantsPercent || 0))) / 100).toLocaleString()}</p>
             </div>
 
             <button onClick={handleSetPercentages} style={{width: '100%', padding: '0.75rem', background: '#1b365d', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1rem', fontWeight: '600', cursor: 'pointer', marginBottom: '0.5rem'}}>Save Configuration</button>

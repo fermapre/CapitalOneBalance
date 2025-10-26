@@ -7,11 +7,12 @@ export default function Footer() {
       bottom: 0,
       left: 0,
       right: 0,
-      background: 'linear-gradient(135deg, #0a1f44 0%, #1b365d 100%)',
-      color: 'rgba(255,255,255,0.8)',
+      background: 'white',
+      color: '#1b365d',
       padding: '1rem 2rem',
-      boxShadow: '0 -2px 10px rgba(0,0,0,0.2)',
-      zIndex: 1000
+      boxShadow: '0 -2px 10px rgba(0,0,0,0.1)',
+      zIndex: 1000,
+      borderTop: '2px solid #1b365d'
     }}>
       <div style={{
         display: 'flex',
@@ -22,7 +23,7 @@ export default function Footer() {
         fontSize: '0.9rem'
       }}>
         <div>
-          <p style={{ margin: 0 }}>
+          <p style={{ margin: 0, color: '#1b365d' }}>
             © {currentYear} Capital One Balance Tracker. All rights reserved.
           </p>
         </div>
@@ -36,12 +37,13 @@ export default function Footer() {
             href="#" 
             onClick={(e) => e.preventDefault()}
             style={{
-              color: 'rgba(255,255,255,0.8)',
+              color: '#1b365d',
               textDecoration: 'none',
-              transition: 'color 0.3s'
+              transition: 'color 0.3s',
+              fontWeight: '500'
             }}
-            onMouseOver={(e) => e.target.style.color = '#fff'}
-            onMouseOut={(e) => e.target.style.color = 'rgba(255,255,255,0.8)'}
+            onMouseOver={(e) => e.target.style.color = '#0f223e'}
+            onMouseOut={(e) => e.target.style.color = '#1b365d'}
           >
             Privacy Policy
           </a>
@@ -49,12 +51,13 @@ export default function Footer() {
             href="#" 
             onClick={(e) => e.preventDefault()}
             style={{
-              color: 'rgba(255,255,255,0.8)',
+              color: '#1b365d',
               textDecoration: 'none',
-              transition: 'color 0.3s'
+              transition: 'color 0.3s',
+              fontWeight: '500'
             }}
-            onMouseOver={(e) => e.target.style.color = '#fff'}
-            onMouseOut={(e) => e.target.style.color = 'rgba(255,255,255,0.8)'}
+            onMouseOver={(e) => e.target.style.color = '#0f223e'}
+            onMouseOut={(e) => e.target.style.color = '#1b365d'}
           >
             Terms of Service
           </a>
@@ -62,12 +65,13 @@ export default function Footer() {
             href="#" 
             onClick={(e) => e.preventDefault()}
             style={{
-              color: 'rgba(255,255,255,0.8)',
+              color: '#1b365d',
               textDecoration: 'none',
-              transition: 'color 0.3s'
+              transition: 'color 0.3s',
+              fontWeight: '500'
             }}
-            onMouseOver={(e) => e.target.style.color = '#fff'}
-            onMouseOut={(e) => e.target.style.color = 'rgba(255,255,255,0.8)'}
+            onMouseOver={(e) => e.target.style.color = '#0f223e'}
+            onMouseOut={(e) => e.target.style.color = '#1b365d'}
           >
             Contact Us
           </a>
