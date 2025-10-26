@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken"; // 👈 AGREGAR ESTO
 import User from "../models/User.js";
 
 const router = express.Router();
@@ -31,7 +32,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login route
 router.post("/login", async (req, res) => {
   console.log("📩 Llamada recibida en /login");
   console.log("➡️ Body recibido:", req.body);
@@ -54,10 +54,22 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "Credenciales inválidas" });
     }
 
-    // Return a safe user object (omit password)
+    // 👇 CREAR TOKEN JWT
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET || "tu_secreto_temporal", // En producción usa .env
+      { expiresIn: "7d" }
+    );
+
     const safeUser = { id: user._id, name: user.name, email: user.email };
     console.log("✅ Inicio de sesión exitoso:", email);
-    res.json({ msg: "Inicio de sesión exitoso", user: safeUser });
+    
+    // 👇 ENVIAR TOKEN
+    res.json({ 
+      msg: "Inicio de sesión exitoso", 
+      token, // 👈 NUEVO
+      user: safeUser 
+    });
   } catch (err) {
     console.error("❌ Error en /login:", err);
     res.status(500).json({ msg: "Error del servidor", error: err.message });
@@ -65,4 +77,3 @@ router.post("/login", async (req, res) => {
 });
 
 export default router;
-

@@ -1,27 +1,29 @@
 import { useState } from "react";
-import { API } from "../api";
+import { useNavigate } from "react-router-dom";
+import { AuthAPI } from "../api";
 import "./../styles.css";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await API.post("/register", form);
-      // Clear the form so the user can register another account
-      setForm({ name: "", email: "", password: "" });
-      // If inputs are controlled, also clear the visible inputs by updating state
+      const res = await AuthAPI.post("/register", form);
       alert(res?.data?.msg || "Usuario registrado correctamente");
+      navigate("/"); // Redirigir a login
     } catch (err) {
-      // Provide more detailed error info for debugging and user feedback
       console.error("Registro error:", err);
       const serverMsg = err?.response?.data || err?.message || "Error al registrar";
-      // If server sent an object with msg, prefer that
       const display = typeof serverMsg === "string" ? serverMsg : serverMsg?.msg || JSON.stringify(serverMsg);
       alert(display);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,12 +36,15 @@ export default function Register() {
           placeholder="Nombre"
           value={form.name}
           onChange={handleChange}
+          required
         />
         <input
           name="email"
+          type="email"
           placeholder="Correo electrónico"
           value={form.email}
           onChange={handleChange}
+          required
         />
         <input
           name="password"
@@ -47,8 +52,12 @@ export default function Register() {
           placeholder="Contraseña"
           value={form.password}
           onChange={handleChange}
+          required
+          minLength="6"
         />
-        <button type="submit">Registrar</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Registrando..." : "Registrar"}
+        </button>
       </form>
       <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
     </div>

@@ -1,32 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API } from "../api";
+import { AuthAPI } from "../api";
 import "./../styles.css";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await API.post("/login", form);
+      const res = await AuthAPI.post("/login", form);
+      
+      // 👇 GUARDAR TOKEN Y USUARIO
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      
       alert(`Bienvenido ${res.data.user.name}`);
-      // Persist simple session so other pages know the user is logged in
-      try {
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-      } catch (e) {
-        console.warn('Could not persist user to localStorage', e);
-      }
-      // Redirect to main after successful login
       navigate("/main");
     } catch (err) {
       console.error("Login error:", err);
       const serverMsg = err?.response?.data || err?.message || "Error al iniciar sesión";
       const display = typeof serverMsg === "string" ? serverMsg : serverMsg?.msg || JSON.stringify(serverMsg);
       alert(display);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,9 +38,11 @@ export default function Login() {
       <form onSubmit={handleSubmit}>
         <input
           name="email"
+          type="email"
           placeholder="Correo electrónico"
           value={form.email}
           onChange={handleChange}
+          required
         />
         <input
           name="password"
@@ -46,8 +50,11 @@ export default function Login() {
           placeholder="Contraseña"
           value={form.password}
           onChange={handleChange}
+          required
         />
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Cargando..." : "Entrar"}
+        </button>
       </form>
       <p>¿No tienes cuenta? <a href="/register">Regístrate</a></p>
     </div>

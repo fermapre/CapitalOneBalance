@@ -7,7 +7,17 @@ const transactionSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now }
 });
 
+// 👇 NUEVO: Transacciones pendientes de categorizar
+const pendingTransactionSchema = new mongoose.Schema({
+  amount: { type: Number, required: true },
+  description: { type: String, required: true },
+  date: { type: Date, required: true },
+  merchant: { type: String }, // Ej. "OXXO", "AMAZON"
+  originalData: { type: Object } // Datos originales del Excel
+});
+
 const balanceSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   salary: { type: Number, required: true },
   allocations: {
     needs: { type: Number, required: true },
@@ -19,7 +29,7 @@ const balanceSchema = new mongoose.Schema({
     wants: { type: Number, required: true },
     savings: { type: Number, required: true },
   },
-  remaining: { // 💰 cuánto queda en cada categoría
+  remaining: {
     needs: { type: Number, required: true },
     wants: { type: Number, required: true },
     savings: { type: Number, required: true },
@@ -27,7 +37,8 @@ const balanceSchema = new mongoose.Schema({
   periodType: { type: String, enum: ["quincenal", "mensual"], default: "mensual" },
   startDate: { type: Date, default: Date.now },
   endDate: { type: Date },
-  transactions: [transactionSchema], // 🧾 transacciones registradas
+  transactions: [transactionSchema], // ✅ Categorizadas
+  pendingTransactions: [pendingTransactionSchema], // 👈 NUEVO: Sin categorizar
   dateCreated: { type: Date, default: Date.now }
 });
 

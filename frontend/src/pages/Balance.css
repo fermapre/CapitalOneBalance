@@ -1,0 +1,40 @@
+/* Pending Badge */
+.pending-badge {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Pending Section */
+.pending-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.pending-section h2 {
+  color: #1b365d;
+  margin-bottom: 0.5rem;
+}
+
+.pending-subtitle {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+

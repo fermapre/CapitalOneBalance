@@ -3,6 +3,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Balance from "./pages/Balance";
+import Landing from "./components/Landing";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./styles.css";
 
 function App() {
@@ -11,8 +13,19 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-  <Route path="/main" element={<Main />} />
-  <Route path="/balance" element={<Balance />} />
+        <Route path="/landing" element={<Landing />} />
+        
+        {/* Rutas protegidas */}
+        <Route path="/main" element={
+          <ProtectedRoute>
+            <Main />
+          </ProtectedRoute>
+        } />
+        <Route path="/balance" element={
+          <ProtectedRoute>
+            <Balance />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );
