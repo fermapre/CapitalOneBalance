@@ -22,13 +22,24 @@
   color: #e41c2d;
 }
 
-.landing .navbar .navbar-right {
+.top-bar {
   display: flex;
-  gap: 1rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
 }
-.landing .navbar .navbar-right i {
+
+.top-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #0a1f44;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-weight: 600;
+}
+.top-btn:hover {
+  background: rgba(0,0,0,0.06);
 }
 
 .landing .hero {

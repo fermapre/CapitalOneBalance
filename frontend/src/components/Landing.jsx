@@ -1,35 +1,26 @@
 import "./Landing.css";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Landing() {
+    const navigate = useNavigate();
+
     return (
         <div className="landing">
-            {/*NAV*/}
-        <nav className="navbar">
-            <div className="navbar-left">
-                <ul>
-                    <li> About us </li>
-                    <li> Credit Cards </li>
-                    <li> Checkings and savings </li>
-                    <li> Auto </li>
-                    <li> Businesses </li>
-                    <li> Commercial </li>
-                    <li> Benefits and tools </li>
-                </ul>
+            {/* Top buttons simplified: Main and Balance */}
+            <div className="top-bar">
+                <button className="top-btn" onClick={() => navigate('/main')}>🏠 Main</button>
+                <button className="top-btn" onClick={() => navigate('/balance')}>💼 Balance</button>
             </div>
-        <div className="navbar-right">
-            <i className="fas fa-search"></i>
-            <i className="fas fa-download"></i>
-            <i className="fas fa-star"></i>
+            <section className="hero">
+                <div className="overlay">
+                    <img src={logo} alt="Capital One" className="logo" />
+                    <div className="buttons">
+                      <button className="primary" onClick={() => navigate('/register')}>Create an account</button>
+                      <button className="secondary" onClick={() => navigate('/')}>Log in</button>
+                    </div>
+                </div>
+            </section>
         </div>
-    </nav>
-        <section className="hero">
-            <div className="overlay">
-                <img src={logo} alt="Capital One" className="logo" />
-                <button className="primary">Create an account </button>
-                <button className="secondary">Log in </button>
-            </div>
-        </section>
-    </div>
     );
-    }
+}
