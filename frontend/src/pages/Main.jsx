@@ -2,20 +2,49 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./../styles.css";
 import csvData from "../assets/BankTestDB.csv?raw";
-import { parseExpenses, calculateTotalExpenses } from "../utils/csvParser";
+import { parseExpenses } from "../utils/csvParser";
 import logo from "../assets/logo.png";
 
 export default function Main() {
   const navigate = useNavigate();
-  const [startingAmount] = useState(10000);
+  const [startingAmount] = useState(() => {
+    const saved = localStorage.getItem('startingAmount');
+    return saved ? parseFloat(saved) : 10000;
+  });
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [remaining, setRemaining] = useState(startingAmount);
+  const [needs, setNeeds] = useState(0);
+  const [wants, setWants] = useState(0);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     try {
       const expenses = parseExpenses(csvData);
-      const total = calculateTotalExpenses(expenses);
+      
+      // Load saved categories
+      const savedCategories = JSON.parse(localStorage.getItem('expenseCategories') || '{}');
+      const expensesWithCategories = expenses.map((expense, index) => ({
+        ...expense,
+        id: index,
+        category: savedCategories[index] || 'uncategorized'
+      }));
+      
+      // Calculate totals by category
+      let needsTotal = 0;
+      let wantsTotal = 0;
+      
+      expensesWithCategories.forEach(expense => {
+        if (expense.category === 'needs') {
+          needsTotal += expense.amount;
+        } else if (expense.category === 'wants') {
+          wantsTotal += expense.amount;
+        }
+      });
+      
+      setNeeds(needsTotal);
+      setWants(wantsTotal);
+      
+      const total = needsTotal + wantsTotal;
       setTotalExpenses(total);
       setRemaining(startingAmount - total);
     } catch (error) {
@@ -141,7 +170,35 @@ export default function Main() {
               borderRadius: '8px',
               marginBottom: '0.5rem'
             }}>
-              <span style={{ fontWeight: '600', color: '#666' }}>Total Gastos:</span>
+              <span style={{ fontWeight: '600', color: '#666' }}>Necesidades:</span>
+              <span style={{ fontWeight: 'bold', color: '#28a745', fontSize: '1.1rem' }}>
+                -${needs.toFixed(2)}
+              </span>
+            </div>
+            
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between',
+              padding: '0.75rem',
+              background: '#f8f9fa',
+              borderRadius: '8px',
+              marginBottom: '0.5rem'
+            }}>
+              <span style={{ fontWeight: '600', color: '#666' }}>Deseos:</span>
+              <span style={{ fontWeight: 'bold', color: '#ffc107', fontSize: '1.1rem' }}>
+                -${wants.toFixed(2)}
+              </span>
+            </div>
+            
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between',
+              padding: '0.75rem',
+              background: '#f8f9fa',
+              borderRadius: '8px',
+              marginBottom: '0.5rem'
+            }}>
+              <span style={{ fontWeight: '600', color: '#666' }}>Total Gastado:</span>
               <span style={{ fontWeight: 'bold', color: '#e41c2d', fontSize: '1.1rem' }}>
                 -${totalExpenses.toFixed(2)}
               </span>
