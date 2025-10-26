@@ -13,35 +13,35 @@ Capital One Balance Tracker is a full-stack web application that allows users to
 
 ## ✨ Key Features
 
-### 🏦 Expense Management
-- **CSV Integration**: Automatically load expenses from bank CSV files (BankTestDB.csv)
+### Expense Management
+- **Real TIme Data (For future implementation)**: Connect in real time your Capital One bank account
 - **Smart Categorization**: Manually categorize each transaction as a Need or Want
 - **Real-time Updates**: See budget changes instantly as you categorize expenses
 - **Date Sorting**: Expenses automatically sorted by date (most recent first)
 
-### 💵 Budget Configuration
+### Budget Configuration
 - **Customizable Percentages**: Set your own percentage allocation for Needs and Wants
 - **Automatic Savings Calculation**: Savings percentage calculated automatically (100% - Needs% - Wants%)
 - **Overspending Protection**: When Needs or Wants exceed budget, the deficit is covered by Savings
 
-### 📊 Visual Dashboard
+### Visual Dashboard
 - **Budget Overview Cards**: Three color-coded cards showing Needs (green), Wants (yellow), and Savings (blue)
 - **Progress Bars**: Visual indicators of spending vs. budget for each category
 - **Real-time Calculations**: See remaining amounts and total spent/remaining at a glance
 - **Warning Alerts**: Get notified when savings are used to cover overspending
 
-### 🔐 User Authentication
+### User Authentication
 - Secure user registration and login
 - JWT-based authentication
 - Protected routes for authenticated users
 - Persistent user sessions
 
-### 🎨 Modern UI/UX
+### Modern UI/UX
 - **Responsive Navigation**: Context-aware navigation (Dashboard/Balance when logged in)
 - **Consistent Design**: Blue and white color scheme matching Capital One branding
 - **Smooth Interactions**: Hover effects, transitions, and visual feedback
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 - **React 19.2.0**: Modern UI library with hooks
@@ -97,7 +97,7 @@ CapitalOneBalance/
 └── README.md
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -171,7 +171,7 @@ CapitalOneBalance/
 - Track percentage allocation across categories
 - Click **View Expense Details** to categorize more expenses
 
-## 📊 Budget Logic
+## Budget Logic
 
 The application uses a flexible percentage-based budgeting system:
 
@@ -194,7 +194,7 @@ If you spend $45,000 on Needs:
 - Savings: $15,000 (reduced by $5,000 overspending)
 - Warning shown: "⚠️ $5,000 used from savings to cover overspending"
 
-## 🎨 Design Features
+## Design Features
 
 ### Color Scheme
 - **Primary Blue**: #1b365d (Capital One brand color)
@@ -212,7 +212,7 @@ If you spend $45,000 on Needs:
 - Hover effects and smooth transitions
 - Responsive design for all screen sizes
 
-## 🔒 Security Features
+## Security Features
 
 - Password hashing with bcryptjs
 - JWT-based authentication
@@ -221,14 +221,14 @@ If you spend $45,000 on Needs:
 - Input validation and sanitization
 - CORS configuration for API security
 
-## 📝 Data Persistence
+## Data Persistence
 
 - **User Data**: Stored in MongoDB Atlas
 - **Budget Settings**: Saved in localStorage (totalMoney, needsPercent, wantsPercent)
 - **Expense Categories**: Saved in localStorage (expenseCategories object)
 - **Session Data**: JWT tokens for maintaining login state
 
-## 🌟 Future Enhancements
+## Future Enhancements
 
 Potential features for future development:
 - Multiple CSV file uploads
@@ -242,25 +242,16 @@ Potential features for future development:
 - Recurring expense tracking
 - Goal setting and tracking
 
-## 👥 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 👤 Author
+## Authors
 
-**María Fernanda Martínez**
-- GitHub: [@fermapre](https://github.com/fermapre)
-
-## 🙏 Acknowledgments
-
-- Capital One for brand inspiration
-- React and Vite communities
-- MongoDB for database services
-- All contributors and testers
+**María Fernanda Martínez Presa**
+**Ana Nicole Sánchez Ramírez**
+**Itzia Elena Salas Iñiguez**
+**Diana María Arámburo Lozano**
 
 ---
 

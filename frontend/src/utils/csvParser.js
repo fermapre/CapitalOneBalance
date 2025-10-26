@@ -1,4 +1,3 @@
-// Utility to parse CSV data
 export const parseCSV = (csvText) => {
   const lines = csvText.trim().split('\n');
   const headers = lines[0].split(',').map(h => h.trim());

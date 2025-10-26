@@ -18,7 +18,6 @@ export default function Login() {
     try {
       const res = await AuthAPI.post("/login", form);
       
-      // 👇 SAVE TOKEN AND USER
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       
