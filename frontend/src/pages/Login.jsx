@@ -14,6 +14,12 @@ export default function Login() {
     try {
       const res = await API.post("/login", form);
       alert(`Bienvenido ${res.data.user.name}`);
+      // Persist simple session so other pages know the user is logged in
+      try {
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      } catch (e) {
+        console.warn('Could not persist user to localStorage', e);
+      }
       // Redirect to main after successful login
       navigate("/main");
     } catch (err) {
