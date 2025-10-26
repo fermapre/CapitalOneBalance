@@ -6,8 +6,8 @@ import User from "../models/User.js";
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  console.log("📩 Llamada recibida en /register");
-  console.log("➡️ Body recibido:", req.body);
+  console.log("Llamada recibida en /register");
+  console.log("Body recibido:", req.body);
 
   try {
     const { name, email, password } = req.body;
@@ -27,14 +27,14 @@ router.post("/register", async (req, res) => {
     console.log("✅ Usuario guardado correctamente:", newUser);
     res.status(201).json({ msg: "Usuario registrado correctamente" });
   } catch (err) {
-    console.error("❌ Error en /register:", err);
+    console.error("Error en /register:", err);
     res.status(500).json({ msg: "Error del servidor", error: err.message });
   }
 });
 
 router.post("/login", async (req, res) => {
-  console.log("📩 Llamada recibida en /login");
-  console.log("➡️ Body recibido:", req.body);
+  console.log("Llamada recibida en /login");
+  console.log("Body recibido:", req.body);
 
   try {
     const { email, password } = req.body;
@@ -50,28 +50,26 @@ router.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.log("⚠️ Contraseña incorrecta para:", email);
+      console.log("Contraseña incorrecta para:", email);
       return res.status(400).json({ msg: "Credenciales inválidas" });
     }
 
-    // 👇 CREAR TOKEN JWT
     const token = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.JWT_SECRET || "tu_secreto_temporal", // En producción usa .env
+      process.env.JWT_SECRET || "tu_secreto_temporal", 
       { expiresIn: "7d" }
     );
 
     const safeUser = { id: user._id, name: user.name, email: user.email };
     console.log("✅ Inicio de sesión exitoso:", email);
-    
-    // 👇 ENVIAR TOKEN
+
     res.json({ 
       msg: "Inicio de sesión exitoso", 
-      token, // 👈 NUEVO
+      token, 
       user: safeUser 
     });
   } catch (err) {
-    console.error("❌ Error en /login:", err);
+    console.error("Error en /login:", err);
     res.status(500).json({ msg: "Error del servidor", error: err.message });
   }
 });

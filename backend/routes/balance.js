@@ -4,7 +4,6 @@ import { authMiddleware } from "../middleware/auth.js"; // 👈 IMPORTAR
 
 const router = express.Router();
 
-// 👇 AGREGAR authMiddleware a todas las rutas
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { salary, allocations, percentages, periodType } = req.body;
@@ -21,7 +20,7 @@ router.post("/", authMiddleware, async (req, res) => {
     }
 
     const newBalance = new Balance({
-      userId: req.userId, // 👈 VIENE DEL TOKEN
+      userId: req.userId, 
       salary,
       allocations,
       percentages,
@@ -38,7 +37,6 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-// 👇 NUEVA RUTA: Obtener balance del usuario
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const balances = await Balance.find({ userId: req.userId }).sort({ dateCreated: -1 });
@@ -48,13 +46,12 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-// Registrar gasto
 router.post("/:id/spend", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const { category, amount, description } = req.body;
 
-    const balance = await Balance.findOne({ _id: id, userId: req.userId }); // 👈 VERIFICAR OWNERSHIP
+    const balance = await Balance.findOne({ _id: id, userId: req.userId });
     if (!balance) return res.status(404).json({ msg: "Balance no encontrado" });
 
     if (balance.remaining[category] < amount) {
@@ -74,11 +71,11 @@ router.post("/:id/spend", authMiddleware, async (req, res) => {
 router.post("/reset/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const oldBalance = await Balance.findOne({ _id: id, userId: req.userId }); // 👈 VERIFICAR OWNERSHIP
+    const oldBalance = await Balance.findOne({ _id: id, userId: req.userId }); 
     if (!oldBalance) return res.status(404).json({ msg: "Balance no encontrado" });
 
     const newBalance = new Balance({
-      userId: req.userId, // 👈 AGREGAR
+      userId: req.userId,
       salary: oldBalance.salary,
       allocations: oldBalance.allocations,
       percentages: oldBalance.percentages,
@@ -101,11 +98,10 @@ router.post("/reset/:id", authMiddleware, async (req, res) => {
   }
 });
 
-// 🆕 NUEVA RUTA: Categorizar una transacción pendiente
 router.post("/:id/categorize/:pendingId", authMiddleware, async (req, res) => {
   try {
     const { id, pendingId } = req.params;
-    const { category } = req.body; // "needs" o "wants"
+    const { category } = req.body; 
 
     if (!["needs", "wants", "savings"].includes(category)) {
       return res.status(400).json({ msg: "Categoría inválida" });
@@ -116,7 +112,6 @@ router.post("/:id/categorize/:pendingId", authMiddleware, async (req, res) => {
       return res.status(404).json({ msg: "Balance no encontrado" });
     }
 
-    // Buscar la transacción pendiente
     const pendingIndex = balance.pendingTransactions.findIndex(
       tx => tx._id.toString() === pendingId
     );
@@ -127,17 +122,14 @@ router.post("/:id/categorize/:pendingId", authMiddleware, async (req, res) => {
 
     const pendingTx = balance.pendingTransactions[pendingIndex];
 
-    // Verificar fondos suficientes
     if (balance.remaining[category] < pendingTx.amount) {
       return res.status(400).json({ 
         msg: `Fondos insuficientes en ${category}. Disponible: $${balance.remaining[category]}, Requerido: $${pendingTx.amount}` 
       });
     }
 
-    // RESTAR del balance
     balance.remaining[category] -= pendingTx.amount;
 
-    // MOVER a transacciones categorizadas
     balance.transactions.push({
       category: category,
       amount: pendingTx.amount,
@@ -145,7 +137,6 @@ router.post("/:id/categorize/:pendingId", authMiddleware, async (req, res) => {
       date: pendingTx.date
     });
 
-    // ELIMINAR de pendientes
     balance.pendingTransactions.splice(pendingIndex, 1);
 
     await balance.save();
@@ -164,7 +155,6 @@ router.post("/:id/categorize/:pendingId", authMiddleware, async (req, res) => {
   }
 });
 
-// 🆕 NUEVA RUTA: Eliminar transacción pendiente (si no aplica)
 router.delete("/:id/pending/:pendingId", authMiddleware, async (req, res) => {
   try {
     const { id, pendingId } = req.params;

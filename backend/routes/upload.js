@@ -19,7 +19,6 @@ const upload = multer({
   }
 });
 
-// 🆕 NUEVA RUTA: Subir transacciones SIN categorizar
 router.post("/card-movements", authMiddleware, upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
@@ -36,7 +35,7 @@ router.post("/card-movements", authMiddleware, upload.single("file"), async (req
       return res.status(404).json({ msg: "Balance no encontrado" });
     }
 
-    // Leer Excel
+    // read excel file
     const workbook = xlsx.read(req.file.buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
@@ -48,11 +47,9 @@ router.post("/card-movements", authMiddleware, upload.single("file"), async (req
     let errorCount = 0;
     const errors = [];
 
-    // Procesar cada fila del Excel
     for (let i = 0; i < data.length; i++) {
       const row = data[i];
-      
-      // Leer columnas (flexible con mayúsculas/minúsculas)
+
       const monto = parseFloat(
         row.monto || row.Monto || row.MONTO || 
         row.amount || row.Amount || row.AMOUNT ||
@@ -70,17 +67,15 @@ router.post("/card-movements", authMiddleware, upload.single("file"), async (req
         row.fecha || row.Fecha || row.FECHA ||
         row.date || row.Date;
       
-      // Validar monto
       if (!monto || isNaN(monto) || monto <= 0) {
         errorCount++;
         errors.push(`Fila ${i + 2}: Monto inválido (${monto})`);
         continue;
       }
 
-      // Parsear fecha
+      // do the date parsing
       let fecha;
       if (fechaRaw) {
-        // Si es número de Excel (serial date)
         if (typeof fechaRaw === 'number') {
           const excelEpoch = new Date(1899, 11, 30);
           fecha = new Date(excelEpoch.getTime() + fechaRaw * 86400000);
@@ -89,25 +84,23 @@ router.post("/card-movements", authMiddleware, upload.single("file"), async (req
         }
         
         if (isNaN(fecha.getTime())) {
-          fecha = new Date(); // Si no se puede parsear, usar fecha actual
+          fecha = new Date(); 
         }
       } else {
         fecha = new Date();
       }
 
-      // Agregar a pendientes (SIN categoría)
       balance.pendingTransactions.push({
         amount: monto,
         description: descripcion.trim(),
         date: fecha,
-        merchant: descripcion.substring(0, 50), // Primeros 50 caracteres
-        originalData: row // Guardar data original por si acaso
+        merchant: descripcion.substring(0, 50), 
+        originalData: row 
       });
 
       addedCount++;
     }
 
-    // Guardar
     await balance.save();
 
     res.json({
@@ -119,7 +112,7 @@ router.post("/card-movements", authMiddleware, upload.single("file"), async (req
     });
 
   } catch (err) {
-    console.error("❌ Error al procesar Excel:", err);
+    console.error("Error al procesar Excel:", err);
     res.status(500).json({ 
       msg: "Error al procesar el archivo", 
       error: err.message 

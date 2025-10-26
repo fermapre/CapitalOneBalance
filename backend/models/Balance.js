@@ -7,13 +7,12 @@ const transactionSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now }
 });
 
-// 👇 NUEVO: Transacciones pendientes de categorizar
 const pendingTransactionSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   description: { type: String, required: true },
   date: { type: Date, required: true },
-  merchant: { type: String }, // Ej. "OXXO", "AMAZON"
-  originalData: { type: Object } // Datos originales del Excel
+  merchant: { type: String }, 
+  originalData: { type: Object } 
 });
 
 const balanceSchema = new mongoose.Schema({
@@ -37,8 +36,8 @@ const balanceSchema = new mongoose.Schema({
   periodType: { type: String, enum: ["quincenal", "mensual"], default: "mensual" },
   startDate: { type: Date, default: Date.now },
   endDate: { type: Date },
-  transactions: [transactionSchema], // ✅ Categorizadas
-  pendingTransactions: [pendingTransactionSchema], // 👈 NUEVO: Sin categorizar
+  transactions: [transactionSchema], 
+  pendingTransactions: [pendingTransactionSchema],
   dateCreated: { type: Date, default: Date.now }
 });
 

@@ -18,7 +18,6 @@ export default function Landing() {
 
     return (
         <div className="landing">
-            {/* Top buttons simplified: Main and Balance (Balance shown only when logged in) */}
             <div className="top-bar">
                 <button className="top-btn" onClick={() => navigate('/main')}>🏠 Main</button>
                 {user && (
