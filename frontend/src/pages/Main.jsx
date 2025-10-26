@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import "./../styles.css";
 import csvData from "../assets/BankTestDB.csv?raw";
 import { parseExpenses } from "../utils/csvParser";
@@ -64,76 +66,17 @@ export default function Main() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1b365d 0%, #0a1f44 100%)'
-    }}>
-      {/* Top Navigation Bar */}
+    <>
+      <Header />
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '0.75rem 1rem',
-        background: 'transparent'
+        minHeight: '100vh',
+        paddingTop: '70px',
+        paddingBottom: '60px',
+        background: 'linear-gradient(135deg, #1b365d 0%, #0a1f44 100%)'
       }}>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button 
-            style={{
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: '#fff',
-              padding: '0.45rem 0.75rem',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '0.9rem'
-            }}
-            onClick={() => navigate('/main')}
-          >
-            🏠 Main
-          </button>
-          <button 
-            style={{
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: '#fff',
-              padding: '0.45rem 0.75rem',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '0.9rem'
-            }}
-            onClick={() => navigate('/balance')}
-          >
-            💼 Balance
-          </button>
-        </div>
-        <button 
-          style={{
-            background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.3)',
-            color: '#fff',
-            padding: '0.45rem 0.75rem',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontWeight: '600',
-            fontSize: '0.9rem'
-          }}
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-      </div>
-
-      {/* Main Content Container */}
-      <div style={{
+        {/* Main Content Container */}
+        <div style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -339,6 +282,8 @@ export default function Main() {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

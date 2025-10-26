@@ -1,6 +1,7 @@
 import logo from "../assets/logo.png";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import "./Balance.css";
 import csvData from "../assets/BankTestDB.csv?raw";
 import { parseExpenses } from "../utils/csvParser";
@@ -40,9 +41,6 @@ export default function Balance() {
   const [savingsRemaining, setSavingsRemaining] = useState(savingsBudget);
   
   const [showCategory, setShowCategory] = useState(null); // 'needs', 'wants', or null
-  
-  const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     loadExpenses();
@@ -174,28 +172,17 @@ export default function Balance() {
     });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-
   const uncategorizedExpenses = expenses.filter(e => e.category === 'uncategorized');
   const needsExpenses = expenses.filter(e => e.category === 'needs');
   const wantsExpenses = expenses.filter(e => e.category === 'wants');
 
   return (
-    <div className="balance-page">
-      <header className="dashboard-header">
-        <div className="logo-section">
-          <img src={logo} alt="Capital One" className="capitalone-logo" />
-          <h1>Hola, {user?.name || "usuario"} 👋</h1>
+    <>
+      <Header />
+      <div className="balance-page" style={{paddingTop: '70px', paddingBottom: '60px', minHeight: '100vh'}}>
+        <div className="logo-section" style={{textAlign: 'center', padding: '1.5rem 0'}}>
+          <img src={logo} alt="Capital One" className="capitalone-logo" style={{width: '250px', maxWidth: '90%'}} />
         </div>
-        <div className="header-actions">
-          <button onClick={() => navigate("/main")} className="btn-secondary">← Back</button>
-          <button onClick={handleLogout} className="btn-secondary">Logout</button>
-        </div>
-      </header>
 
       {showPercentInput && (
         <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000}}>
@@ -347,5 +334,7 @@ export default function Balance() {
         {uncategorizedExpenses.length === 0 && (<p style={{textAlign: 'center', color: '#666', padding: '2rem', background: 'white', borderRadius: '0 0 8px 8px'}}>All expenses have been categorized! ✅</p>)}
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
