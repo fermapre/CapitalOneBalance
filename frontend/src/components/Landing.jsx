@@ -1,4 +1,4 @@
-import "./Landing.scss";
+import "./Landing.css";
 import logo from "../assets/logo.png";
 
 export default function Landing() {
