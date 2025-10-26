@@ -37,6 +37,8 @@ export default function Balance() {
   const [wantsRemaining, setWantsRemaining] = useState(wantsBudget);
   const [savingsRemaining, setSavingsRemaining] = useState(savingsBudget);
   
+  const [showCategory, setShowCategory] = useState(null); // 'needs', 'wants', or null
+  
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -177,6 +179,8 @@ export default function Balance() {
   };
 
   const uncategorizedExpenses = expenses.filter(e => e.category === 'uncategorized');
+  const needsExpenses = expenses.filter(e => e.category === 'needs');
+  const wantsExpenses = expenses.filter(e => e.category === 'wants');
 
   return (
     <div className="balance-page">
@@ -230,18 +234,20 @@ export default function Balance() {
         </div>
 
         <div className="balance-cards">
-          <div className="balance-card needs">
-            <h3>Needs 🏠</h3>
+          <div className="balance-card needs" onClick={() => setShowCategory(showCategory === 'needs' ? null : 'needs')} style={{cursor: 'pointer', transition: 'transform 0.2s', border: showCategory === 'needs' ? '3px solid #28a745' : 'none'}}>
+            <h3>Needs 🏠 {needsExpenses.length > 0 && `(${needsExpenses.length})`}</h3>
             <p className="amount">${needsRemaining.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
             <p className="total">Spent: ${needsSpent.toLocaleString()} of ${needsBudget.toLocaleString()} ({needsPercent}%)</p>
             <div className="progress-bar"><div className="progress-fill needs-fill" style={{width: `${needsBudget > 0 ? (needsSpent / needsBudget) * 100 : 0}%`}}></div></div>
+            <p style={{fontSize: '0.8rem', color: '#666', marginTop: '0.5rem', fontStyle: 'italic'}}>Click to {showCategory === 'needs' ? 'hide' : 'view'} expenses</p>
           </div>
 
-          <div className="balance-card wants">
-            <h3>Wants 🎮</h3>
+          <div className="balance-card wants" onClick={() => setShowCategory(showCategory === 'wants' ? null : 'wants')} style={{cursor: 'pointer', transition: 'transform 0.2s', border: showCategory === 'wants' ? '3px solid #ffc107' : 'none'}}>
+            <h3>Wants 🎮 {wantsExpenses.length > 0 && `(${wantsExpenses.length})`}</h3>
             <p className="amount">${wantsRemaining.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
             <p className="total">Spent: ${wantsSpent.toLocaleString()} of ${wantsBudget.toLocaleString()} ({wantsPercent}%)</p>
             <div className="progress-bar"><div className="progress-fill wants-fill" style={{width: `${wantsBudget > 0 ? (wantsSpent / wantsBudget) * 100 : 0}%`}}></div></div>
+            <p style={{fontSize: '0.8rem', color: '#666', marginTop: '0.5rem', fontStyle: 'italic'}}>Click to {showCategory === 'wants' ? 'hide' : 'view'} expenses</p>
           </div>
 
           <div className="balance-card savings">
@@ -259,8 +265,56 @@ export default function Balance() {
         </div>
       </div>
 
-      <div className="pending-section">
-        <h2>📋 Categorize Your Expenses ({expenses.length})</h2>
+      {/* Category Details Section */}
+      {showCategory && (
+        <div className="pending-section" style={{marginTop: '2rem'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
+            <h2>
+              {showCategory === 'needs' ? '🏠 Needs Expenses' : '🎮 Wants Expenses'} 
+              ({showCategory === 'needs' ? needsExpenses.length : wantsExpenses.length})
+            </h2>
+            <button 
+              onClick={() => setShowCategory(null)} 
+              style={{padding: '0.5rem 1rem', background: '#e0e0e0', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600'}}>
+              ✕ Close
+            </button>
+          </div>
+          
+          <div style={{display: 'grid', gridTemplateColumns: '1fr auto 100px', gap: '1rem', padding: '1rem', background: '#f8f9fa', borderRadius: '8px 8px 0 0', fontWeight: 'bold', color: '#1b365d'}}>
+            <div>Description / Date</div>
+            <div style={{textAlign: 'right'}}>Amount</div>
+            <div style={{textAlign: 'center'}}>Action</div>
+          </div>
+
+          <div style={{background: 'white', borderRadius: '0 0 8px 8px', overflow: 'hidden'}}>
+            {(showCategory === 'needs' ? needsExpenses : wantsExpenses).map((expense) => (
+              <div key={expense.id} style={{display: 'grid', gridTemplateColumns: '1fr auto 100px', gap: '1rem', padding: '1rem', borderBottom: '1px solid #e0e0e0'}}>
+                <div>
+                  <div style={{fontWeight: '600', color: '#333', marginBottom: '0.25rem'}}>{expense.description}</div>
+                  <div style={{fontSize: '0.85rem', color: '#666'}}>{formatDate(expense.date)}</div>
+                </div>
+                <div style={{color: '#e41c2d', fontWeight: 'bold', fontSize: '1.1rem', textAlign: 'right', alignSelf: 'center'}}>-${expense.amount.toFixed(2)}</div>
+                <div style={{alignSelf: 'center', textAlign: 'center'}}>
+                  <button 
+                    onClick={() => handleCategoryChange(expense.id, 'uncategorized')} 
+                    style={{padding: '0.5rem', background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'}}>
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {((showCategory === 'needs' && needsExpenses.length === 0) || (showCategory === 'wants' && wantsExpenses.length === 0)) && (
+            <p style={{textAlign: 'center', color: '#666', padding: '2rem', background: 'white', borderRadius: '0 0 8px 8px'}}>
+              No expenses in this category yet
+            </p>
+          )}
+        </div>
+      )}
+
+      <div className="pending-section" style={{marginTop: '2rem'}}>
+        <h2>📋 Uncategorized Expenses ({uncategorizedExpenses.length})</h2>
         <p className="pending-subtitle">Select whether each expense is a Need or a Want</p>
         
         <div style={{display: 'grid', gridTemplateColumns: '1fr auto 200px', gap: '1rem', padding: '1rem', background: '#f8f9fa', borderRadius: '8px 8px 0 0', fontWeight: 'bold', color: '#1b365d', marginTop: '1rem'}}>
@@ -270,22 +324,22 @@ export default function Balance() {
         </div>
 
         <div style={{background: 'white', borderRadius: '0 0 8px 8px', overflow: 'hidden'}}>
-          {expenses.map((expense) => (
-            <div key={expense.id} style={{display: 'grid', gridTemplateColumns: '1fr auto 200px', gap: '1rem', padding: '1rem', borderBottom: '1px solid #e0e0e0', background: expense.category === 'uncategorized' ? '#fff9e6' : 'white'}}>
+          {uncategorizedExpenses.map((expense) => (
+            <div key={expense.id} style={{display: 'grid', gridTemplateColumns: '1fr auto 200px', gap: '1rem', padding: '1rem', borderBottom: '1px solid #e0e0e0', background: '#fff9e6'}}>
               <div>
                 <div style={{fontWeight: '600', color: '#333', marginBottom: '0.25rem'}}>{expense.description}</div>
                 <div style={{fontSize: '0.85rem', color: '#666'}}>{formatDate(expense.date)}</div>
               </div>
               <div style={{color: '#e41c2d', fontWeight: 'bold', fontSize: '1.1rem', textAlign: 'right', alignSelf: 'center'}}>-${expense.amount.toFixed(2)}</div>
               <div style={{display: 'flex', gap: '0.5rem', alignSelf: 'center'}}>
-                <button onClick={() => handleCategoryChange(expense.id, 'needs')} style={{flex: 1, padding: '0.5rem', background: expense.category === 'needs' ? '#28a745' : '#e9ecef', color: expense.category === 'needs' ? 'white' : '#333', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'}}>🏠 Need</button>
-                <button onClick={() => handleCategoryChange(expense.id, 'wants')} style={{flex: 1, padding: '0.5rem', background: expense.category === 'wants' ? '#ffc107' : '#e9ecef', color: expense.category === 'wants' ? 'white' : '#333', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'}}>🎮 Want</button>
+                <button onClick={() => handleCategoryChange(expense.id, 'needs')} style={{flex: 1, padding: '0.5rem', background: '#28a745', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'}}>🏠 Need</button>
+                <button onClick={() => handleCategoryChange(expense.id, 'wants')} style={{flex: 1, padding: '0.5rem', background: '#ffc107', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'}}>🎮 Want</button>
               </div>
             </div>
           ))}
         </div>
 
-        {expenses.length === 0 && (<p style={{textAlign: 'center', color: '#666', padding: '2rem'}}>No expenses recorded</p>)}
+        {uncategorizedExpenses.length === 0 && (<p style={{textAlign: 'center', color: '#666', padding: '2rem', background: 'white', borderRadius: '0 0 8px 8px'}}>All expenses have been categorized! ✅</p>)}
       </div>
     </div>
   );
