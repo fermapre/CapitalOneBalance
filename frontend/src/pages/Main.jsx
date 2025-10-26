@@ -47,7 +47,7 @@ export default function Main() {
             style={{
               background: 'transparent',
               border: '1px solid rgba(255,255,255,0.3)',
-              color: '#000',
+              color: '#fff',
               padding: '0.45rem 0.75rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -62,7 +62,7 @@ export default function Main() {
             style={{
               background: 'transparent',
               border: '1px solid rgba(255,255,255,0.3)',
-              color: '#000',
+              color: '#fff',
               padding: '0.45rem 0.75rem',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -78,7 +78,7 @@ export default function Main() {
           style={{
             background: 'transparent',
             border: '1px solid rgba(255,255,255,0.3)',
-            color: '#000',
+            color: '#fff',
             padding: '0.45rem 0.75rem',
             borderRadius: '6px',
             cursor: 'pointer',

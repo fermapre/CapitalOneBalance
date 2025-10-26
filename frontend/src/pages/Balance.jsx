@@ -86,9 +86,9 @@ export default function Balance() {
 
       {/* BALANCE OVERVIEW */}
       <div className="balance-overview">
-        <div className="balance-header-info">
-          <h2>Resumen de Gastos</h2>
-          <p className="balance-period">
+        <div className="balance-header-info" style={{ textAlign: 'center' }}>
+          <h2 style={{ color: 'white' }}>Resumen de Gastos</h2>
+          <p className="balance-period" style={{ color: 'white' }}>
             Del 1 al 31 de Octubre 2025
           </p>
         </div>
@@ -136,14 +136,64 @@ export default function Balance() {
         <h2>📋 Todos los Gastos ({expenses.length})</h2>
         <p className="pending-subtitle">Movimientos registrados en el archivo CSV</p>
         
-        <div className="pending-list">
+        {/* Table Header */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto',
+          gap: '1rem',
+          padding: '1rem',
+          background: '#f8f9fa',
+          borderRadius: '8px 8px 0 0',
+          fontWeight: 'bold',
+          color: '#1b365d',
+          marginTop: '1rem'
+        }}>
+          <div>Descripción / Fecha</div>
+          <div style={{ textAlign: 'right' }}>Monto</div>
+        </div>
+
+        {/* Expenses List */}
+        <div style={{
+          background: 'white',
+          borderRadius: '0 0 8px 8px',
+          overflow: 'hidden'
+        }}>
           {expenses.map((expense, index) => (
-            <div key={index} className="pending-item">
-              <div className="pending-info">
-                <div className="pending-description">{expense.description}</div>
-                <div className="pending-date">{formatDate(expense.date)}</div>
+            <div 
+              key={index} 
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                gap: '1rem',
+                padding: '1rem',
+                borderBottom: index < expenses.length - 1 ? '1px solid #e0e0e0' : 'none',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#f8f9fa'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'white'}
+            >
+              <div>
+                <div style={{ 
+                  fontWeight: '600', 
+                  color: '#333',
+                  marginBottom: '0.25rem'
+                }}>
+                  {expense.description}
+                </div>
+                <div style={{ 
+                  fontSize: '0.85rem', 
+                  color: '#666' 
+                }}>
+                  {formatDate(expense.date)}
+                </div>
               </div>
-              <div className="pending-amount" style={{ color: '#e41c2d', fontWeight: 'bold' }}>
+              <div style={{ 
+                color: '#e41c2d', 
+                fontWeight: 'bold',
+                fontSize: '1.1rem',
+                textAlign: 'right',
+                alignSelf: 'center'
+              }}>
                 -${expense.amount.toFixed(2)}
               </div>
             </div>
