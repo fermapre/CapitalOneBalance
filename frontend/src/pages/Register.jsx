@@ -15,11 +15,11 @@ export default function Register() {
     setLoading(true);
     try {
       const res = await AuthAPI.post("/register", form);
-      alert(res?.data?.msg || "Usuario registrado correctamente");
-      navigate("/"); // Redirigir a login
+      alert(res?.data?.msg || "User registered successfully");
+      navigate("/"); // Redirect to login
     } catch (err) {
-      console.error("Registro error:", err);
-      const serverMsg = err?.response?.data || err?.message || "Error al registrar";
+      console.error("Register error:", err);
+      const serverMsg = err?.response?.data || err?.message || "Registration error";
       const display = typeof serverMsg === "string" ? serverMsg : serverMsg?.msg || JSON.stringify(serverMsg);
       alert(display);
     } finally {
@@ -29,11 +29,11 @@ export default function Register() {
 
   return (
     <div className="container">
-      <h2>Registro</h2>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input
           name="name"
-          placeholder="Nombre"
+          placeholder="Name"
           value={form.name}
           onChange={handleChange}
           required
@@ -41,7 +41,7 @@ export default function Register() {
         <input
           name="email"
           type="email"
-          placeholder="Correo electrónico"
+          placeholder="Email"
           value={form.email}
           onChange={handleChange}
           required
@@ -49,17 +49,17 @@ export default function Register() {
         <input
           name="password"
           type="password"
-          placeholder="Contraseña"
+          placeholder="Password"
           value={form.password}
           onChange={handleChange}
           required
           minLength="6"
         />
         <button type="submit" disabled={loading}>
-          {loading ? "Registrando..." : "Registrar"}
+          {loading ? "Registering..." : "Register"}
         </button>
       </form>
-      <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+      <p>Already have an account? <a href="/">Login</a></p>
     </div>
   );
 }
