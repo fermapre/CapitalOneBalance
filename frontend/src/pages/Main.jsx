@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./../styles.css";
-import Landing from "../components/Landing";
 import csvData from "../assets/BankTestDB.csv?raw";
 import { parseExpenses, calculateTotalExpenses } from "../utils/csvParser";
+import logo from "../assets/logo.png";
 
 export default function Main() {
   const navigate = useNavigate();
   const [startingAmount] = useState(10000);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [remaining, setRemaining] = useState(startingAmount);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     try {
@@ -22,24 +23,90 @@ export default function Main() {
     }
   }, [startingAmount]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
-    <div>
-      <Landing />
-      
-      {/* Budget Overview Card */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        margin: '2rem auto',
-        maxWidth: '500px',
-        padding: '0 1rem'
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1b365d 0%, #0a1f44 100%)'
+    }}>
+      {/* Top Navigation Bar */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '0.75rem 1rem',
+        background: 'transparent'
       }}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button 
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.3)',
+              color: '#000',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.9rem'
+            }}
+            onClick={() => navigate('/main')}
+          >
+            🏠 Main
+          </button>
+          <button 
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.3)',
+              color: '#000',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.9rem'
+            }}
+            onClick={() => navigate('/balance')}
+          >
+            💼 Balance
+          </button>
+        </div>
+        <button 
+          style={{
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.3)',
+            color: '#000',
+            padding: '0.45rem 0.75rem',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '0.9rem'
+          }}
+          onClick={handleLogout}
+        >
+          Cerrar sesión
+        </button>
+      </div>
+
+      {/* Main Content Container */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '2rem 1rem',
+        gap: '2rem'
+      }}>
+        {/* Budget Card at the Top */}
         <div style={{
           background: 'white',
           padding: '2rem',
           borderRadius: '12px',
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
           width: '100%',
+          maxWidth: '500px',
           border: '3px solid #1b365d'
         }}>
           <h2 style={{ 
@@ -119,6 +186,30 @@ export default function Main() {
           >
             📊 Ver Desglose de Gastos
           </button>
+        </div>
+
+        {/* Logo Section Below */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem'
+        }}>
+          <img 
+            src={logo} 
+            alt="Capital One" 
+            style={{ 
+              width: '300px',
+              maxWidth: '100%'
+            }} 
+          />
+          <p style={{ 
+            color: 'white', 
+            fontSize: '1.1rem',
+            textAlign: 'center'
+          }}>
+            Bienvenido, {user.name || 'Usuario'}! 👋
+          </p>
         </div>
       </div>
     </div>
